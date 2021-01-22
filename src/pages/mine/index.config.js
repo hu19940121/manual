@@ -1,4 +1,4 @@
 export default {
   navigationBarTitleText: '',
-  navigationBarBackgroundColor: '#000'
+  navigationBarBackgroundColor: '#101010'
 }

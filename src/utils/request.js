@@ -2,7 +2,8 @@
 import Taro from '@tarojs/taro'
 import { getCurrentPageUrl } from '@/utils/index'
 
-const host = 'http://127.0.0.1:7002/api'
+// const host = 'http://127.0.0.1:7002/api'
+const host = 'https://kaier001.com/api'
 
 const request = (data) => {
  return new Promise((resolve,reject)=>{

@@ -38,7 +38,10 @@
           </view>
         </view>
         <view class="flex">
-          <view class="heng-card flex flex-direction justify-center align-center margin-right">
+          <view
+            class="heng-card flex flex-direction justify-center align-center margin-right"
+            @tap="unopen"
+          >
             <image
               class="heng-card-icon "
               src="../../images/taiyang.png"
@@ -47,7 +50,10 @@
               新手指南
             </view>
           </view>
-          <view class="heng-card flex flex-direction justify-center align-center margin-right">
+          <view
+            class="heng-card flex flex-direction justify-center align-center margin-right"
+            @tap="unopen"
+          >
             <image
               class="heng-card-icon "
               src="../../images/liwu.png"
@@ -56,7 +62,10 @@
               推荐有礼
             </view>
           </view>
-          <view class="heng-card flex flex-direction justify-center align-center">
+          <view
+            class="heng-card flex flex-direction justify-center align-center"
+            @tap="unopen"
+          >
             <image
               class="heng-card-icon "
               src="../../images/bi.png"
@@ -93,6 +102,12 @@
       }
     },
     methods: {
+      unopen() {
+        this.$Taro.showToast({
+          icon: 'none',
+          title:'未开发，敬请期待！'
+        })
+      },
       login() {
         this.$Taro.navigateTo({
           url:'/pages/login/index'
