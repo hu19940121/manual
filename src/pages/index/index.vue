@@ -11,7 +11,7 @@
     </view>
     <view class="main padding">
       <view
-        v-for="(item,index) in list"
+        v-for="(item,index) in manualList"
         :key="index"
         class="margin-bottom"
       >
@@ -34,30 +34,47 @@
 <script>
   import manualItem from '@/components/manualItem'
   import Taro from '@tarojs/taro'
-
+  import { myManuals } from '@/api/user'
+  import { mapActions } from 'vuex'
   export default {
     components: {
       manualItem,
     },
+    onLoad() {
+      this.init()
+    },
+    onShow() {
+
+    },
     data() {
       return {
         list: [
-          {
-            icon: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3053856589,1015129567&fm=26&gp=0.jpg',
-            name:'抖音',
-            desc: '记录美好生活',
-            online: false
-          },
-          {
-            icon: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3262171803,2318469631&fm=26&gp=0.jpg',
-            name:'微信',
-            desc: '轻松连接好友',
-            online: true
-          }
         ]
       }
     },
+    computed: {
+      manualList() {
+        return this.$store.state.manualList
+      }
+    },
     methods: {
+      ...mapActions(['getManualList']),
+      init() {
+        const token = this.$Taro.getStorageSync('token') || '' 
+        if (token) {
+          this.getManualList()
+        } else {
+          this.list = []
+        }
+      },
+      //获取我添加的手册
+      // getManualList() {
+      //   myManuals().then((res)=>{
+      //     this.list = res.data || []
+      //     this.$store.dispatch('changeManualsCount', this.list.length)
+      //     console.log('res',res);
+      //   })
+      // },
       add() {
         // 跳转到目的页面，打开新页面
         Taro.switchTab({

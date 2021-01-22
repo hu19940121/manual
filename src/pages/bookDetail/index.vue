@@ -19,22 +19,19 @@
         > 
           <view class="swiper-item">
             <image
-              mode=""
+              mode="aspectFit"
               class="swiper-item-image"
-              :src="imageUrl"
+              :src="item.image"
             />
             <view class="desc padding-sm">
               <view class="desc-title article__info">
-                操作指引-01
+                操作指引-0{{ index + 1 }}
               </view>
-              <view class="desc-text margin-top-xs">
-                1.点击如图标记位置，在输入框中输入“乘车码” 
-              </view>
-              <view class="desc-text margin-top-xs">
-                2.点击如图标记位置，在输入框中输入“乘车码” 
-              </view>
-              <view class="desc-text margin-top-xs">
-                2.点击如图标记位置，在输入框中输入“乘车码” 
+              <view
+                style="white-space: pre-line;"
+                class="desc-text margin-top-xs"
+              >
+                {{ item.content }}
               </view>
             </view>
           </view>
@@ -46,15 +43,24 @@
 </template>
 
 <script>
+  import { getSectionsDetailBySectionId } from '@/api/section'
   export default {
     data() {
       return {
-        list:[1,1,1,1,1,1],
+        list:[ ],
         imageUrl: 'https://resource.kaier001.com/20190506share-bg.png',
         currentIndex: 1
       }
     },
+    onLoad(options) {
+      this.getSectionsDetailBySectionId(options.sectionId)
+    },
     methods: {
+      getSectionsDetailBySectionId(id) {
+        getSectionsDetailBySectionId({ sectionId: id }).then((res)=>{
+          this.list = res.data || []
+        })
+      },
       handleOnchange(e) {
         this.currentIndex = e.detail.current + 1
       }

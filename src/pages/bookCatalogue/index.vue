@@ -4,10 +4,10 @@
       <view class="align-center flex title-wrap">
         <image
           class="icon-image"
-          src="https://resource.kaier001.com/20190506share-bg.png"
+          :src="manualInfo.icon"
         />
         <view class="margin-left-xs">
-          微信
+          {{ manualInfo.name }}
         </view>
       </view>
       <view class="desc">
@@ -16,12 +16,12 @@
     </view>
     <view class="list padding-lg">
       <view
-        v-for="item in 10"
-        :key="item"
+        v-for="section in manualInfo.sections"
+        :key="section.id"
         class="list-item padding-sm margin-bottom"
-        @tap="read"
+        @tap="read(section)"
       >
-        如何乘坐公交车
+        {{ section.name }}
       </view>
     </view>
   </view>
@@ -29,12 +29,27 @@
 
 <script>
   import Taro from '@tarojs/taro'
-
+  import { getSectionsByManualId } from '@/api/section'
   export default {
+    data() {
+      return {
+        manualInfo: {
+          sections:[]
+        }
+      }
+    },
+    onLoad(options) {
+      this.getSectionsByManualId(options.manualId)
+    },
     methods: {
-      read() {
+      getSectionsByManualId(id) {
+        getSectionsByManualId({ manualId: id }).then((res)=>{
+          this.manualInfo = res.data || {}
+        })
+      },
+      read(section) {
         Taro.navigateTo({
-          url: '/pages/bookDetail/index'
+          url: `/pages/bookDetail/index?sectionId=${section.id}`
         })
       }
     },

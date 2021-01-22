@@ -4,6 +4,7 @@ export default {
     'pages/bookCenter/index',
     'pages/bookCatalogue/index',
     'pages/bookDetail/index',
+    'pages/login/index',
     'pages/mine/index'
   ],
   window: {

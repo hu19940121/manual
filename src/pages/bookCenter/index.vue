@@ -9,75 +9,42 @@
         indicator-dots
         autoplay
       >
-        <swiper-item>
+        <swiper-item
+          v-for="banner in bannerList"
+          :key="banner.id"
+        >
           <image
+
             mode="aspectFill"
             class="swiper-item-image"
-            :src="imageUrl"
-          />
-        </swiper-item>
-        <swiper-item>
-          <image
-            class="swiper-item-image"
-            mode="aspectFill"
-            :src="imageUrl"
+            :src="banner.image"
           />
         </swiper-item>
       </swiper>
     </view>
     <view class="main">
-      <view class="title padding-tb article__h3">
-        常用软件
-      </view>
-      <view class="list">
-        <scroll-view
-          class="scroll-view_H"
-          scroll-x="true"
-          style="width: 100%"
-          @scroll="scroll"
-        >
-          <soft-item
-            v-for="(item,index) in softList"
-            :key="index"
-            :info="item"
-          />
-        </scroll-view>
-      </view>
-
-      <view class="title padding-tb article__h3">
-        限时购物
-      </view>
-      <view class="list">
-        <scroll-view
-          class="scroll-view_H"
-          scroll-x="true"
-          style="width: 100%"
-          @scroll="scroll"
-        >
-          <soft-item
-            v-for="(item,index) in softList"
-            :key="index"
-            :info="item"
-          />
-        </scroll-view>
-      </view>
-
-      <view class="title padding-tb article__h3">
-        社交聊天
-      </view>
-      <view class="list">
-        <scroll-view
-          class="scroll-view_H"
-          :scroll-x="true"
-          style="width: 100%"
-          @scroll="scroll"
-        >
-          <soft-item
-            v-for="(item,index) in softList"
-            :key="index"
-            :info="item"
-          />
-        </scroll-view>
+      <view
+        v-for="soft in softList"
+        :key="soft.id"
+      >
+        <view class="title padding-tb article__h3">
+          {{ soft.name }}
+        </view>
+        <view class="list">
+          <scroll-view
+            class="scroll-view_H"
+            scroll-x="true"
+            style="width: 100%"
+            @scroll="scroll"
+          >
+            <soft-item
+              v-for="manual in soft.manuals"
+              :key="manual.id"
+              :info="manual"
+              @updateSuccess="handleUpdateSuccess"
+            />
+          </scroll-view>
+        </view>
       </view>
     </view>
   </view>
@@ -85,38 +52,56 @@
 
 <script>
   import softItem from '@/components/softItem'
+  import { getManualCateList } from '@/api/manualCate'
+  import { getBannerList } from '@/api/banner'
+
+  
+  import { mapActions } from 'vuex'
+
   export default {
     components: {
       softItem,
     },
+    onLoad() {
+      console.log('zhixing');
+      const token = this.$Taro.getStorageSync('token') || '' 
+      if (!token) {
+        this.redirectToLogin()
+      }
+      this.getManualCateList()
+    },
+    onShow() {
+      this.getBannerList()
+    },
     data() {
       return {
-        imageUrl: 'https://resource.kaier001.com/20190506share-bg.png',
         softList:[
-          {
-            name:'抖音',
-            desc: '记录美好生活',
-            isJoin: true
-          },
-          {
-            name:'微信',
-            desc: '轻松连接好友',
-            isJoin: false
-          },
-          {
-            name:'拼多多',
-            desc: '拼着买，才省钱',
-            isJoin: true
-          },
-          {
-            name:'拼多多',
-            desc: '拼着买，才省钱',
-            isJoin: true
-          }
-        ]
+        ],
+        bannerList:[]
       }
     },
     methods: {
+      ...mapActions(['getManualList']),
+      handleUpdateSuccess() {
+        this.getManualCateList()
+        this.getManualList()
+      },
+      getBannerList() {
+        getBannerList().then(res=>{
+          this.bannerList = res.data || []
+          console.log(this.bannerList);
+        })
+      },
+      getManualCateList() {
+        getManualCateList().then((res)=>{
+          this.softList = res.data || []
+        })
+      },
+      redirectToLogin() {
+        this.$Taro.navigateTo({
+          url:'/pages/login/index'
+        })
+      },
       upper(e) {
         console.log('upper:', e)
       },

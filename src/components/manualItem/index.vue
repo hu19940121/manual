@@ -13,21 +13,21 @@
           {{ info.name }}
         </view>
         <view class="desc">
-          {{ info.desc }}
+          {{ info.des }}
         </view>
       </view>
     </view>
     <view
       class="right flex flex-direction justify-center align-center"
     >
-      <view :class="['icon', { on:info.online }]">
+      <view :class="['icon', { on:info.isOnline }]">
         <image
           class="icon-image"
           src="../../images/shangxian.png"
         />
       </view>
-      <view :class="['shangxian-text', 'margin-top-xs', { online:info.online } ]">
-        {{ info.online ? '开始学习' : '即将上线' }}
+      <view :class="['shangxian-text', 'margin-top-xs', { online:info.isOnline } ]">
+        {{ info.isOnline ? '开始学习' : '即将上线' }}
       </view>
 
     </view>
@@ -51,9 +51,17 @@
     },
     methods: {
       study() {
+        if (!this.info.isOnline) {
+          Taro.showToast({
+            icon: 'none',
+            duration: 1000,
+            title: '暂未上线，敬请期待！'
+          })
+          return 
+        }
         // 跳转到目的页面，打开新页面
         Taro.navigateTo({
-          url: '/pages/bookCatalogue/index'
+          url: `/pages/bookCatalogue/index?manualId=${this.info.id}`
         })
       }
     },

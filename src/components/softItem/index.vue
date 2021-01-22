@@ -5,13 +5,13 @@
       <image
         class="soft-item-logo"
         mode="aspectFill"
-        src="https://resource.kaier001.com/20190506share-bg.png"
+        :src="info.icon"
       />
       <view class="article__h3 margin-top-xs">
         {{ info.name }}
       </view>
       <view class="article__info">
-        {{ info.desc }}
+        {{ info.des }}
       </view>
       <!-- <button>取消加入</button> -->
       <button
@@ -20,6 +20,7 @@
         type="primary"
         size="mini"
         plain="true"
+        @tap="cancelJoin"
       >
         取消加入
       </button>
@@ -28,6 +29,7 @@
         class="button margin-top-xs"
         type="primary"
         size="mini"
+        @tap="join" 
       >
         加入
       </button>
@@ -37,12 +39,39 @@
 </template>
 
 <script>
+  import { addManual,delManual } from '@/api/user'
   export default {
     props: {
       info: {
         type: Object,
         default: ()=>({})
       },
+    },
+    methods: {
+      join() {
+        addManual({
+          manualId: this.info.id
+        }).then((res)=>{
+          this.$emit('updateSuccess')
+          this.$Taro.showToast({
+            title: '加入成功',
+            icon: 'success',
+            duration: 1000
+          })
+        })
+      },
+      cancelJoin() {
+        delManual({
+          manualId: this.info.id
+        }).then((res)=>{
+          this.$emit('updateSuccess')
+          this.$Taro.showToast({
+            title: '取消成功',
+            icon: 'success',
+            duration: 1000
+          })
+        })
+      }
     },
   }
 </script>

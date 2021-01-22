@@ -5,21 +5,27 @@
       <view class="hu">
         <view class="avatar-wrap flex justify-center align-center">
           <image
+            v-if="!isLogin"
             class="avatar"
             src="../../images/avatar.png"
+          />
+          <image
+            v-else
+            class="avatar"
+            :src="userInfo.avatar"
           />
         </view>
       </view>
       <view class="main ">
         <view class="nickname article__h2 text-center">
-          即可爸妈
+          {{ isLogin ? userInfo.nickname : '' }}
         </view>
         <view class="article__info text-center">
-          玩转只能，保持年轻
+          玩转智能，保持年轻
         </view>
         <view class="card flex  padding-sm margin-tb">
           <view class="left text-center">
-            <view>4</view>
+            <view>{{ manualsCount }}</view>
             <view class="article__info">
               我的手册
             </view>
@@ -62,13 +68,37 @@
         </view>
       </view>
     </view>
-
+    <!-- <button @tap="login">
+      登陆
+    </button> -->
   </view>
 </template>
 
 <script>
   export default {
-    
+    data() {
+      return {
+        userInfo: {},
+        isLogin: false
+      }
+    },
+    onLoad() {
+      this.userInfo = this.$Taro.getStorageSync('userInfo') || {}
+      this.isLogin = !!this.$Taro.getStorageSync('token') || '' //有token说明登陆成功
+      console.log('userInfo',this.userInfo);
+    },
+    computed: {
+      manualsCount() {
+        return this.$store.state.manualList.length
+      }
+    },
+    methods: {
+      login() {
+        this.$Taro.navigateTo({
+          url:'/pages/login/index'
+        })
+      }
+    },
   }
 </script>
 
@@ -102,6 +132,7 @@
         .avatar {
           width:120px;
           height: 120px;
+          border-radius: 50%;
         }
       }
     }
