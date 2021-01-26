@@ -48,9 +48,27 @@ const config = {
     }
   },
   h5: {
-    publicPath: '/',
+    publicPath: process.env.NODE_ENV==='development'?'/':'./',
+    // publicPath: '/',
     staticDirectory: 'static',
+    devServer: {
+      port: 9020,
+      proxy: {
+        '/api': {
+            // target: 'https://kaier001.com',  
+            target: 'http://127.0.0.1:7002',  
+
+            changeOrigin: true
+        }
+      }
+    },
     postcss: {
+      pxtransform: {
+        enable: true,
+        config: {
+          selectorBlackList: [/van-/]
+        }
+      },
       autoprefixer: {
         enable: true,
         config: {

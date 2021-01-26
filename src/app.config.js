@@ -5,6 +5,8 @@ export default {
     'pages/bookCatalogue/index',
     'pages/bookDetail/index',
     'pages/login/index',
+    'pages/h5Login/index',
+    'pages/h5Register/index',
     'pages/mine/index'
   ],
   window: {

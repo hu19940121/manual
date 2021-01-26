@@ -2,6 +2,11 @@ import Vue from 'vue'
 import store from './store'
 import Taro from '@tarojs/taro'
 Vue.prototype.$Taro = Taro
+
+import Vant from 'vant';
+import 'vant/lib/index.css';
+Vue.use(Vant);
+
 import './app.scss'
 
 // Vue.config.productionTip = false

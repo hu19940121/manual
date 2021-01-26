@@ -39,6 +39,7 @@
 </template>
 
 <script>
+  import Taro from '@tarojs/taro'
   import { addManual,delManual } from '@/api/user'
   export default {
     props: {
@@ -53,7 +54,7 @@
           manualId: this.info.id
         }).then((res)=>{
           this.$emit('updateSuccess')
-          this.$Taro.showToast({
+          Taro.showToast({
             title: '加入成功',
             icon: 'success',
             duration: 1000
@@ -65,7 +66,7 @@
           manualId: this.info.id
         }).then((res)=>{
           this.$emit('updateSuccess')
-          this.$Taro.showToast({
+          Taro.showToast({
             title: '取消成功',
             icon: 'success',
             duration: 1000

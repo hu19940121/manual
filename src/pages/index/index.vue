@@ -34,7 +34,7 @@
 <script>
   import manualItem from '@/components/manualItem'
   import Taro from '@tarojs/taro'
-  import { myManuals } from '@/api/user'
+  // import { myManuals } from '@/api/user'
   import { mapActions } from 'vuex'
   export default {
     components: {
@@ -60,7 +60,7 @@
     methods: {
       ...mapActions(['getManualList']),
       init() {
-        const token = this.$Taro.getStorageSync('token') || '' 
+        const token = Taro.getStorageSync('token') || '' 
         if (token) {
           this.getManualList()
         } else {

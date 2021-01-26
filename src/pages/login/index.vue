@@ -1,14 +1,29 @@
 <template>
   <view>
-
     <view class="noAuthUserPage">
-      <image src="./huojian.png" />
-      <text>登陆后会享受更多服务哦～</text>
+      <image
+        class="login-logo"
+        src="./huojian.png"
+      />
+      <view><text class="login-desc">
+        登陆后会享受更多服务哦～
+      </text></view>
       <button
+        v-if="currentEnv === 'weapp'"
+        class="login-button"
         type="primary"
         size="mini"
         open-type="getUserInfo"
         @getuserinfo="onGetUserInfo"
+      >
+        确定
+      </button>
+      <button
+        v-else
+        class="login-button"
+        type="primary"
+        size="mini"
+        @tap="h5login"
       >
         确定
       </button>
@@ -24,23 +39,26 @@
 </template>
 
 <script>
+  import Taro from '@tarojs/taro'
   import { wxAuthLogin } from '@/api/user'
   import { getPageUrlWithArgs } from '@/utils/index'
   export default {
     data() {
       return {
-        
+        currentEnv: process.env.TARO_ENV
       }
     },
     methods: {
 
       onGetUserInfo(eventDetail) {
-        const pages = this.$Taro.getCurrentPages()
+        if (eventDetail.detail.errMsg === 'getUserInfo:fail auth deny') { //拒绝授权 不调接口
+          return false
+        }
+        const pages = Taro.getCurrentPages()
         const filterdPages =  pages.filter(page=>{
             return page.route !== "pages/login/index"
         })
-        const that = this
-        this.$Taro.login({
+        Taro.login({
           success: function (res) {
             if (res.code) {
               wxAuthLogin({
@@ -49,17 +67,17 @@
                 iv: eventDetail.detail.iv,
               }).then((loginRes)=>{
                 console.log('loginRes',loginRes);
-                that.$Taro.setStorageSync('userInfo',loginRes.data.respData)
-                that.$Taro.setStorageSync('token', loginRes.data.respData.token)
+                Taro.setStorageSync('userInfo',loginRes.data.respData)
+                Taro.setStorageSync('token', loginRes.data.respData.token)
                 if (filterdPages.length > 0 ) { 
                   //返回上一夜
                   const url = getPageUrlWithArgs(filterdPages[0])
-                  that.$Taro.reLaunch({
+                  Taro.reLaunch({
                     url
                   })
                 } else {
                   //返回首页
-                  that.$Taro.switchTab({
+                  Taro.switchTab({
                     url: '/pages/index/index'
                   })
                 }
@@ -71,6 +89,9 @@
           }
         })
 
+      },
+      h5login() {
+        console.log('login');
       }
     },
   }
@@ -80,17 +101,17 @@
 .noAuthUserPage {
   text-align: center
 }
-.noAuthUserPage image {
+.login-logo {
   display: block;
   width: 300px;
   height: 300px;
   margin: 80px auto 0;
 }
-.noAuthUserPage text {
+.noAuthUserPage .login-desc {
   font-size: 26px;
   color: #333
 }
-.noAuthUserPage button {
+.noAuthUserPage .login-button {
   display: block;
   width: 260px;
   margin: 20px auto 0;

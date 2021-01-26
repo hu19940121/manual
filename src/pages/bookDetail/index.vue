@@ -1,7 +1,9 @@
 <template>
   <view class="book-detail padding-lr">
     <view class="top text-center padding-tb-sm">
-      <text>{{ list.length }}</text> / {{ currentIndex }}
+      <!-- <text>{{ list.length }}</text> / {{ currentIndex }} -->
+      <text>{{ currentIndex }}</text> / {{ list.length }}
+
     </view>
     <view class="shouces">
       <swiper
@@ -47,23 +49,24 @@
   export default {
     data() {
       return {
+        currentIndex:1,
         list:[ ],
         imageUrl: 'https://resource.kaier001.com/20190506share-bg.png',
-        currentIndex: 1
       }
     },
     onLoad(options) {
       this.getSectionsDetailBySectionId(options.sectionId)
     },
     methods: {
+      handleOnchange(e) {
+        console.log('11111');
+        this.currentIndex = e.detail.current + 1
+      },
       getSectionsDetailBySectionId(id) {
         getSectionsDetailBySectionId({ sectionId: id }).then((res)=>{
           this.list = res.data || []
         })
       },
-      handleOnchange(e) {
-        this.currentIndex = e.detail.current + 1
-      }
     },
   }
 </script>

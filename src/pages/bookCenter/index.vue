@@ -33,7 +33,7 @@
         <view class="list">
           <scroll-view
             class="scroll-view_H"
-            scroll-x="true"
+            :scroll-x="true"
             style="width: 100%"
             @scroll="scroll"
           >
@@ -54,9 +54,9 @@
   import softItem from '@/components/softItem'
   import { getManualCateList } from '@/api/manualCate'
   import { getBannerList } from '@/api/banner'
-
-  
+  import Taro from '@tarojs/taro'
   import { mapActions } from 'vuex'
+  import { redirecrtLoginPage } from '@/utils/index'
 
   export default {
     components: {
@@ -64,9 +64,10 @@
     },
     onLoad() {
       console.log('zhixing');
-      const token = this.$Taro.getStorageSync('token') || '' 
+      const token = Taro.getStorageSync('token') || '' 
       if (!token) {
-        this.redirectToLogin()
+        redirecrtLoginPage()
+        // this.redirectToLogin()
       }
       this.getManualCateList()
     },
@@ -97,11 +98,11 @@
           this.softList = res.data || []
         })
       },
-      redirectToLogin() {
-        this.$Taro.navigateTo({
-          url:'/pages/login/index'
-        })
-      },
+      // redirectToLogin() {
+      //   Taro.navigateTo({
+      //     url:'/pages/login/index'
+      //   })
+      // },
       upper(e) {
         console.log('upper:', e)
       },

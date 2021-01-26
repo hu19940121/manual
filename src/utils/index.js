@@ -21,7 +21,19 @@ function getCurrentPageUrl(){
   var url = currentPage.route //当前页面url
   return '/' + url
 }
+function redirecrtLoginPage() {
+  let loginUrl =''
+  if (process.env.TARO_ENV === 'weapp') {
+    loginUrl = '/pages/login/index'
+  } else if (process.env.TARO_ENV === 'h5') {
+    loginUrl = '/pages/h5Login/index'
+  }
+  Taro.navigateTo({
+    url:loginUrl
+  })
+}
 export {
   getPageUrlWithArgs,
-  getCurrentPageUrl
+  getCurrentPageUrl,
+  redirecrtLoginPage
 }

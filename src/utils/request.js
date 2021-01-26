@@ -1,14 +1,20 @@
 
 import Taro from '@tarojs/taro'
-import { getCurrentPageUrl } from '@/utils/index'
+import { getCurrentPageUrl,redirecrtLoginPage } from '@/utils/index'
 
-// const host = 'http://127.0.0.1:7002/api'
-const host = 'https://kaier001.com/api'
+const host = 'http://127.0.0.1:7002'
+// const host = 'https://kaier001.com'
 
 const request = (data) => {
+  let url = ''
+  if (process.env.TARO_ENV === 'weapp') {
+    url = host + data.url //小程序 接口请求绝对路径
+  } else if (process.env.TARO_ENV === 'h5') {
+    url = data.url //h5 接口请求方式为相对路径 走代理配置
+  }
  return new Promise((resolve,reject)=>{
     Taro.request({
-      url: host + data.url, 
+      url: url, 
       data: data.data || '',
       method: data.method,
       header: {
@@ -40,14 +46,13 @@ const request = (data) => {
 }
 
 function handleJumpLoginPage() {
+  let loginUrl = ''
   console.log('getCurrentPageUrl',getCurrentPageUrl());
   //先判断当前页面是不是login页面 防止多次执行跳转logo页面
   if (getCurrentPageUrl() === '/pages/login/index') {
     return 
   }
-  Taro.navigateTo({
-    url:'/pages/login/index'
-  })
+  redirecrtLoginPage()
 }
  
 export default request

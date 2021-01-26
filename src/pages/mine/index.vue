@@ -75,41 +75,60 @@
             </view>
           </view>
         </view>
+        <button
+          v-show="disPlayExitLoginButton"
+          class="margin-top"
+          type="primary"
+          @tap="exitLogin"
+        >
+          退出登陆
+        </button>
       </view>
+
     </view>
-    <!-- <button @tap="login">
-      登陆
-    </button> -->
+
   </view>
 </template>
 
 <script>
+  import Taro from '@tarojs/taro'
+
   export default {
     data() {
       return {
         userInfo: {},
-        isLogin: false
+        isLogin: false,
+        env: process.env.TARO_ENV
       }
     },
-    onLoad() {
-      this.userInfo = this.$Taro.getStorageSync('userInfo') || {}
-      this.isLogin = !!this.$Taro.getStorageSync('token') || '' //有token说明登陆成功
+    onShow() {
+      this.userInfo = Taro.getStorageSync('userInfo') || {}
+      this.isLogin = !!Taro.getStorageSync('token') || '' //有token说明登陆成功
       console.log('userInfo',this.userInfo);
     },
     computed: {
       manualsCount() {
         return this.$store.state.manualList.length
+      },
+      disPlayExitLoginButton() {
+        return this.env === 'h5' && this.isLogin
       }
     },
     methods: {
+      exitLogin() {
+        Taro.clearStorageSync()
+        Taro.reLaunch({
+          url:'/pages/index/index'
+        })
+      },
       unopen() {
-        this.$Taro.showToast({
+        Taro.showToast({
           icon: 'none',
           title:'未开发，敬请期待！'
         })
       },
       login() {
-        this.$Taro.navigateTo({
+        Taro.navigateTo({
           url:'/pages/login/index'
         })
       }
